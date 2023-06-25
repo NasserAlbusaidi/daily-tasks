@@ -41,6 +41,11 @@ class User extends Authenticatable
         'deleted_at',
     ];
 
+    protected $appends = [
+        'is_admin',
+        'user_role',
+    ];
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
@@ -76,5 +81,10 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function getUserRoleAttribute()
+    {
+        return $this->roles()->pluck('title')->implode(' ');
     }
 }

@@ -109,6 +109,29 @@
                 </ul>
             </li>
         @endcan
+        @can('project_access')
+        <li class="c-sidebar-nav-dropdown {{ request()->is("admin/projects*") ? "c-show" : "" }} {{ request()->is("admin/project-statuses*") ? "c-show" : "" }} {{ request()->is("admin/project-types*") ? "c-show" : "" }} {{ request()->is("admin/project-tags*") ? "c-show" : "" }} {{ request()->is("admin/project-images*") ? "c-show" : "" }} {{ request()->is("admin/project-comments*") ? "c-show" : "" }} {{ request()->is("admin/project-reviews*") ? "c-show" : "" }} {{ request()->is("admin/project-comments*") ? "c-show" : "" }} {{ request()->is("admin/project-reviews*") ? "c-show" : "" }} {{ request()->is("admin/project-comments*") ? "c-show" : "" }} {{ request()->is("admin/project-reviews*") ? "c-show" : "" }} {{ request()->is("admin/project-comments*") ? "c-show" : "" }} {{ request()->is("admin/project-reviews*") ? "c-show" : "" }} {{ request()->is("admin/project-comments*") ? "c-show" : "" }} {{ request()->is("admin/project-reviews*") ? "c-show" : "" }}">
+            <a class="c-sidebar-nav-dropdown-toggle" href="#">
+                <i class="fa-fw fas fa-cube c-sidebar-nav-icon">
+
+                </i>
+                {{ trans('cruds.project.title') }}
+            </a>
+            <ul class="c-sidebar-nav-dropdown-items">
+                @can('task_status_access')
+                    <li class="c-sidebar-nav-item">
+                        <a href="{{ route("admin.projects.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/project-active") || request()->is("admin/project-active/*") ? "c-active" : "" }}">
+
+                            </i>
+                            {{ trans('cruds.project.activeProject') }}
+                        </a>
+                    </li>
+                @endcan
+
+            </ul>
+        </li>
+    @endcan
+
         @if(file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php')))
             @can('profile_password_edit')
                 <li class="c-sidebar-nav-item">
