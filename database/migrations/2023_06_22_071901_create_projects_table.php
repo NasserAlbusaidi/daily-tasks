@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('estimation_cost');
+            $table->integer('estimation_cost');
             $table->integer('engineer_owner');
             $table->string('project_owner');
-            $table->string('actual_cost');
+            $table->integer('actual_cost');
             $table->string('pdf_attachment');
             $table->string('excel_attachment');
             $table->integer('vote_number');

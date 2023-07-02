@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->unsignedBigInteger('status_id')->nullable();
-            $table->foreign('status_id', 'status_fk_8460459')->references('id')->on('task_statuses');
+        Schema::table('projects', function ( $table) {
+            $table->integer('status_id');
         });
     }
 
@@ -22,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('project', function (Blueprint $table) {
+            $table->dropColumn('pdf_attachment');
+            $table->dropColumn('excel_attachment');
+        });
     }
 };

@@ -57,6 +57,29 @@
                 </ul>
             </li>
         @endcan
+        @can('user_management_access')
+            <li class="c-sidebar-nav-dropdown {{ request()->is("admin/permissions*") ? "c-show" : "" }} {{ request()->is("admin/roles*") ? "c-show" : "" }} {{ request()->is("admin/users*") ? "c-show" : "" }}">
+                <a class="c-sidebar-nav-dropdown-toggle" href="#">
+                    <i class="fa-fw fas fa-address-book c-sidebar-nav-icon">
+
+                    </i>
+                    {{ trans('cruds.projectOwner.title') }}
+                </a>
+                <ul class="c-sidebar-nav-dropdown-items">
+                    @can('permission_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.project-owners.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/project-owners") || request()->is("admin/project-owners/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-bars c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.projectOwner.title_list') }}
+                            </a>
+                        </li>
+                    @endcan
+
+                </ul>
+            </li>
+        @endcan
         @can('task_management_access')
             <li class="c-sidebar-nav-dropdown {{ request()->is("admin/task-statuses*") ? "c-show" : "" }} {{ request()->is("admin/task-tags*") ? "c-show" : "" }} {{ request()->is("admin/tasks*") ? "c-show" : "" }} {{ request()->is("admin/tasks-calendars*") ? "c-show" : "" }}">
                 <a class="c-sidebar-nav-dropdown-toggle" href="#">
@@ -109,7 +132,7 @@
                 </ul>
             </li>
         @endcan
-        @can('project_access')
+        @can('project_show')
         <li class="c-sidebar-nav-dropdown {{ request()->is("admin/projects*") ? "c-show" : "" }} {{ request()->is("admin/project-statuses*") ? "c-show" : "" }} {{ request()->is("admin/project-types*") ? "c-show" : "" }} {{ request()->is("admin/project-tags*") ? "c-show" : "" }} {{ request()->is("admin/project-images*") ? "c-show" : "" }} {{ request()->is("admin/project-comments*") ? "c-show" : "" }} {{ request()->is("admin/project-reviews*") ? "c-show" : "" }} {{ request()->is("admin/project-comments*") ? "c-show" : "" }} {{ request()->is("admin/project-reviews*") ? "c-show" : "" }} {{ request()->is("admin/project-comments*") ? "c-show" : "" }} {{ request()->is("admin/project-reviews*") ? "c-show" : "" }} {{ request()->is("admin/project-comments*") ? "c-show" : "" }} {{ request()->is("admin/project-reviews*") ? "c-show" : "" }} {{ request()->is("admin/project-comments*") ? "c-show" : "" }} {{ request()->is("admin/project-reviews*") ? "c-show" : "" }}">
             <a class="c-sidebar-nav-dropdown-toggle" href="#">
                 <i class="fa-fw fas fa-cube c-sidebar-nav-icon">

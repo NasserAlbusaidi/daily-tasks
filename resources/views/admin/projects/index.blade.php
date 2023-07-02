@@ -38,7 +38,10 @@
                             {{ trans('cruds.task.fields.tag') }}
                         </th>
                         <th>
-                            {{ trans('cruds.task.fields.attachment') }}
+                            {{ trans('cruds.project.fields.PDF_attachement') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.project.fields.Excel_attachement') }}
                         </th>
                         <th>
                             {{ trans('cruds.task.fields.due_date') }}
@@ -73,12 +76,20 @@
                                 {{ $project->actual_cost ?? '' }}
                             </td>
                             <td>
-                                @if($project->pdf_attachment)
-                                    <a href="{{ $project->pdf_attachment->getUrl() }}" target="_blank">
+                                @if($project->pdf)
+                                    <a href="{{ $project->pdf->getUrl() }}" target="_blank">
                                         {{ trans('global.view_file') }}
                                     </a>
                                 @endif
                             </td>
+
+                            <td>
+                                @if ($project->excel)
+                                <a href="{{ $project->excel->getUrl() }}" target="_blank">
+                                    {{ trans('global.view_file') }}
+                                </a>
+
+                                @endif
                             <td>
                                 {{ $project->vote_number ?? '' }}
                             </td>
@@ -87,19 +98,19 @@
                             </td>
                             <td>
                                 @can('task_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.tasks.show', $project->id) }}">
+                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.projects.show', $project->id) }}">
                                         {{ trans('global.view') }}
                                     </a>
                                 @endcan
 
                                 @can('task_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.tasks.edit', $project->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.projects.edit', $project->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
                                 @endcan
 
                                 @can('task_delete')
-                                    <form action="{{ route('admin.tasks.destroy', $project->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                    <form action="{{ route('admin.projects.destroy', $project->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
