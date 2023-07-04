@@ -21,9 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('project', function (Blueprint $table) {
-            $table->dropColumn('pdf_attachment');
-            $table->dropColumn('excel_attachment');
-        });
+
     }
 };

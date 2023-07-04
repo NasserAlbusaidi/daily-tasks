@@ -39,6 +39,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('projects/destroy', 'ProjectController@massDestroy')->name('projects.massDestroy');
     Route::resource('projects', 'ProjectController');
     Route::post('projects/media', 'ProjectController@storeMedia')->name('projects.storeMedia');
+    Route::post('projects/ckmedia', 'ProjectController@storeCKEditorImages')->name('projects.storeCKEditorImages');
+
 
     // Project Owners
     Route::delete('project-owners/destroy', 'ProjectOwnerController@massDestroy')->name('project-owners.massDestroy');

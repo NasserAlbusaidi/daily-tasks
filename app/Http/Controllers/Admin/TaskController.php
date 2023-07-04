@@ -68,7 +68,7 @@ class TaskController extends Controller
         $assigned_tos = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $task->load('status', 'tags', 'assigned_to');
-
+        // dd($task->media);
         return view('admin.tasks.edit', compact('assigned_tos', 'statuses', 'tags', 'task'));
     }
 
@@ -76,6 +76,7 @@ class TaskController extends Controller
     {
         $task->update($request->all());
         $task->tags()->sync($request->input('tags', []));
+        dd($task->attachment);
         if ($request->input('attachment', false)) {
             if (! $task->attachment || $request->input('attachment') !== $task->attachment->file_name) {
                 if ($task->attachment) {

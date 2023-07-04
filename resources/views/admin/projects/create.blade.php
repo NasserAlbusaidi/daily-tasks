@@ -21,14 +21,14 @@
             </div>
 
             <div class="form-group">
-            <label class="required" for="estimation_cost" >{{trans('cruds.project.fields.estimation_cost')}}</label>
+            <label class="required" for="estimation_cost" >{{trans('cruds.project.fields.estamtion_cost')}}</label>
             <input class="form-control {{ $errors->has('estimation_cost') ? 'is-invalid' : '' }}" type="number" name="estimation_cost" id="estimation_cost" value="{{ old('estimation_cost', '') }}" required>
             @if($errors->has('estimation_cost'))
                 <div class="invalid-feedback">
                     {{ $errors->first('estimation_cost') }}
                 </div>
             @endif
-            <span class="help-block"> {{trans('cruds.project.fields.estimation_cost_helper')}}</span>
+            <span class="help-block"> {{trans('cruds.project.fields.estamtion_cost_helper')}}</span>
             </div>
 
             <div class="form-group">
@@ -41,9 +41,9 @@
             @endif
             <span class="help-block"> {{trans('cruds.project.fields.actual_cost_helper')}}</span>
             </div>
-            {{-- project Owner
+            {{-- project Owner --}}
 
-            <div class="form-group">
+           <div class="form-group">
                 <label class="required" for="project_owner">{{ trans('cruds.project.fields.project_owner') }}</label>
                 <select class="form-control select2 {{ $errors->has('project_owner') ? 'is-invalid' : '' }}" name="project_owner" id="project_owner" required>
                     @foreach($project_owner as $id => $entry)
@@ -56,7 +56,7 @@
                     </div>
                 @endif
                 <span class="help-block">{{ trans('cruds.project.fields.status_helper') }}</span>
-            </div> --}}
+            </div>
 
             {{-- project Engineer --}}
 
@@ -116,6 +116,17 @@
             </div>
 
             <div class="form-group">
+                <label class="required" for="vote_number" >{{trans('cruds.project.fields.vote_number')}}</label>
+                <input class="form-control {{ $errors->has('vote_number') ? 'is-invalid' : '' }}" type="number" name="vote_number" id="vote_number" value="{{ old('vote_number', '') }}" required>
+                @if($errors->has('vote_number'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('vote_number') }}
+                    </div>
+                @endif
+                <span class="help-block"> {{trans('cruds.project.fields.vote_number_helper')}}</span>
+                </div>
+{{--
+            <div class="form-group">
                 <label for="due_date">{{ trans('cruds.project.fields.due_date') }}</label>
                 <input class="form-control date {{ $errors->has('due_date') ? 'is-invalid' : '' }}" type="text" name="due_date" id="due_date" value="{{ old('due_date') }}">
                 @if($errors->has('due_date'))
@@ -124,7 +135,7 @@
                     </div>
                 @endif
                 <span class="help-block">{{ trans('cruds.project.fields.due_date_helper') }}</span>
-            </div>
+            </div> --}}
             <div class="form-group">
                 <label for="assigned_to_id">{{ trans('cruds.project.fields.assigned_to') }}</label>
                 <select class="form-control select2 {{ $errors->has('assigned_to') ? 'is-invalid' : '' }}" name="assigned_to_id" id="assigned_to_id">
@@ -158,6 +169,7 @@
     url: '{{ route('admin.projects.storeMedia') }}',
     maxFilesize: 2, // MB
     maxFiles: 1,
+    acceptedFiles: '.pdf',
     addRemoveLinks: true,
     headers: {
       'X-CSRF-TOKEN': "{{ csrf_token() }}"
@@ -211,6 +223,7 @@ Dropzone.options.documentDropzone = {
     url: '{{ route('admin.projects.storeMedia') }}',
     maxFilesize: 2, // MB
     maxFiles: 1,
+    acceptedFiles: '.xlsx',
     addRemoveLinks: true,
     headers: {
       'X-CSRF-TOKEN': "{{ csrf_token() }}"

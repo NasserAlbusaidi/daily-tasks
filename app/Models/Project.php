@@ -34,20 +34,11 @@ class Project extends Model implements HasMedia
         'assigned_to',
     ];
 
-    public function AssignedTo()
-    {
-        //many users
-
-        return $this->belongsToMany(User::class);
-    }
 
 
 
-    public function engineerOwner()
-    {
-        //one user
-        return $this->belongsTo(User::class, 'engineer_owner');
-    }
+
+
 
     public function projectStatus()
     {
@@ -82,6 +73,38 @@ class Project extends Model implements HasMedia
     {
         $this->addMediaConversion('thumb')->fit('crop', 50, 50);
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
+    }
+
+    //get owner name
+
+    public function owner_name()
+    {
+        return $this->belongsTo(ProjectOwner::class, 'project_owner');
+    }
+
+    //get engineer name
+
+    public function getEngineerOwnerNameAttribute()
+    {
+        return $this->engineerOwner->name ?? '';
+    }
+
+    //get assigned to name
+
+    public function assigned_to_name()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(TaskStatus::class, 'status_id');
+    }
+
+    public function engineer_name()
+    {
+        //user with role engineer
+        return $this->belongsTo(User::class, 'engineer_owner');
     }
 
 

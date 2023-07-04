@@ -62,6 +62,8 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.task.fields.tag_helper') }}</span>
             </div>
+
+
             <div class="form-group">
                 <label for="attachment">{{ trans('cruds.task.fields.attachment') }}</label>
                 <div class="needsclick dropzone {{ $errors->has('attachment') ? 'is-invalid' : '' }}" id="attachment-dropzone">
@@ -73,6 +75,8 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.task.fields.attachment_helper') }}</span>
             </div>
+
+
             <div class="form-group">
                 <label for="due_date">{{ trans('cruds.task.fields.due_date') }}</label>
                 <input class="form-control date {{ $errors->has('due_date') ? 'is-invalid' : '' }}" type="text" name="due_date" id="due_date" value="{{ old('due_date', $task->due_date) }}">

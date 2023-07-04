@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use App\Http\Requests\MassDestroyTaskRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
+use App\Http\Requests\MassDestroyProjectRequest;
 use App\Models\Project;
+use App\Models\ProjectOwner;
 use App\Models\TaskStatus;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,8 +20,8 @@ class ProjectController extends Controller
     public function index(Project $project)
     {
         abort_if(Gate::denies('project_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $projects = Project::with(['media'])->get();
-        // dd($projects->first()->attachment);
+        $projects = Project::with(['media', 'assigned_to_name', 'owner_name'])->where('status_id', '!=', 3)->get();
+        //get owner name
         return view('admin.projects.index', compact('projects'));
     }
 
@@ -29,7 +30,7 @@ class ProjectController extends Controller
         abort_if(Gate::denies('project_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $statuses = TaskStatus::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
         $assigned_to = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-        //get user role
+        $project_owner = ProjectOwner::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
 
         //get users with role engineer
@@ -37,7 +38,58 @@ class ProjectController extends Controller
             $q->where('title', 'engineer');
         })->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.projects.create', compact('statuses', 'assigned_to', 'engineer_owner'));
+        return view('admin.projects.create', compact('statuses', 'assigned_to', 'engineer_owner', 'project_owner'));
+    }
+
+    public function edit(Project $project)
+    {
+        abort_if(Gate::denies('project_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $project->load('status', 'assigned_to_name', 'owner_name');
+        $statuses = TaskStatus::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $assigned_tos = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $project_owner = ProjectOwner::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $engineer_owner = User::whereHas('roles', function($q){
+            $q->where('title', 'engineer');
+        })->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.projects.edit', compact('project', 'statuses', 'assigned_tos', 'project_owner', 'engineer_owner'));
+    }
+
+    public function update(Request $request, Project $project) {
+
+       $project->update(
+              [
+                'title' => $request->title,
+                'estimation_cost' => 250,
+                'actual_cost' => $request->actual_cost,
+                'engineer_owner' => $request->engineer_owner,
+                'status_id' => $request->status_id,
+                'assigned_to' => $request->assigned_to_id,
+                'project_owner' => $request->project_owner,
+                'vote_number' => $request->vote_number,
+              ]
+       );
+       if($request->input('pdf_attachment', false)){
+           if(!$project->pdf || $request->input('pdf_attachment') !== $project->pdf->file_name){
+               if($project->pdf){
+                   $project->pdf->delete();
+               }
+               $project->addMedia(storage_path('tmp/uploads/' . basename($request->input('pdf_attachment'))))->toMediaCollection('pdf_attachment');
+           }
+         }elseif($project->pdf){
+                $project->pdf->delete();
+            }
+        if($request->input('excel_attachment', false)){
+            if(!$project->excel || $request->input('excel_attachment') !== $project->excel->file_name){
+                if($project->excel){
+                    $project->excel->delete();
+                }
+                $project->addMedia(storage_path('tmp/uploads/' . basename($request->input('excel_attachment'))))->toMediaCollection('excel_attachment');
+            }
+        }elseif($project->excel){
+            $project->excel->delete();
+        }
+        return redirect()->route('admin.projects.index');
     }
 
     public function store(Request $request)
@@ -49,9 +101,9 @@ class ProjectController extends Controller
             'actual_cost' => $request->actual_cost,
             'engineer_owner' => $request->engineer_owner,
             'status_id' => $request->status_id,
-            'assigned_to_id' => $request->assigned_to_id,
-            'project_owner' => 2,
-            'vote_number' => 0,
+            'assigned_to' => $request->assigned_to_id,
+            'project_owner' => $request->project_owner,
+            'vote_number' => $request->vote_number,
 
 
         ]);
@@ -75,10 +127,10 @@ class ProjectController extends Controller
         return redirect()->route('admin.projects.index');
     }
 
-    public function massDestroy(MassDestroyTaskRequest $request)
+    public function massDestroy(MassDestroyProjectRequest $request)
     {
        $project = Project::find(request('ids'));
-        dd($project);
+
        foreach ($project as $key => $value) {
            $value->delete();
        }
@@ -92,6 +144,18 @@ class ProjectController extends Controller
         $project = Project::find($id);
         $project->delete();
         return back();
+    }
+
+    public function storeCKEditorImages(Request $request)
+    {
+        abort_if(Gate::denies('project_create') && Gate::denies('project_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $model         = new Project();
+        $model->id     = $request->input('crud_id', 0);
+        $model->exists = true;
+        $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
+
+        return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
     }
 
 }

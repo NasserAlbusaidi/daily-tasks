@@ -16,10 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->integer('estimation_cost');
             $table->integer('engineer_owner');
-            $table->string('project_owner');
+            $table->unsignedBigInteger('project_owner');
             $table->integer('actual_cost');
-            $table->string('pdf_attachment');
-            $table->string('excel_attachment');
             $table->integer('vote_number');
             //multiple users
             $table->unsignedBigInteger('assigned_to')->nullable();
