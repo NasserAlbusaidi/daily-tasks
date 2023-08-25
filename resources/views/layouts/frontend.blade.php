@@ -88,7 +88,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                    <a class="dropdown-item" href="{{ route('frontend.profile.index') }}">{{ __('My profile') }}</a>
+                                    {{-- <a class="dropdown-item" href="{{ route('frontend.profile.index') }}">{{ __('My profile') }}</a> --}}
 
                                     @can('user_management_access')
                                         <a class="dropdown-item disabled" href="#">
