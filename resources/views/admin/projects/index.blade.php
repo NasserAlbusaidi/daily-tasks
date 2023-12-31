@@ -49,7 +49,7 @@
                             </th>
 
                             <th>
-                                {{ trans('cruds.project.fields.assigned_to') }}
+                                {{ trans('cruds.project.fields.owner') }}
                             </th>
                             <th>
                                 &nbsp;
@@ -97,7 +97,7 @@
                                     @endif
 
                                 <td>
-                                    {{ $project->assigned_to_name->name ?? '' }}
+                                    {{ $project->owner_name->name ?? '' }}
                                 </td>
                                 <td>
                                     @can('task_show')
@@ -201,10 +201,11 @@
                         fontSize: '20',
                         alignment: 'center'
                     };
-                    //text align
+
                     doc.defaultStyle.alignment = 'center';
-                    //add border to table
-                }
+                    //set header width to 50%
+                    doc.content[1].table.widths = ['*', '*', '*', '*', '*', '*'];
+                                }
             }
 
             let exportExcelButton = {
