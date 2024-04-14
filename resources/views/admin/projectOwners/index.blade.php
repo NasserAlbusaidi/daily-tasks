@@ -28,7 +28,9 @@
                         <th>
                             {{ trans('cruds.user.fields.name') }}
                         </th>
-
+                        <th>
+                            {{ trans('cruds.project.fields.name') }}
+                        </th>
                         <th>
                             &nbsp;
                         </th>
@@ -46,6 +48,8 @@
                             <td>
                                 {{ $owner->name ?? '' }}
                             </td>
+                            <td>
+                                {{ $owner->projects->name ?? 'Not assigned' }}
 
                             <td>
                                 @can('user_show')

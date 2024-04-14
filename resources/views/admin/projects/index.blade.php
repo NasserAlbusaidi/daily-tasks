@@ -49,7 +49,7 @@
                             </th>
 
                             <th>
-                                {{ trans('cruds.project.fields.owner') }}
+                                {{ trans('cruds.project.fields.engineer_owner') }}
                             </th>
                             <th>
                                 &nbsp;
@@ -97,7 +97,7 @@
                                     @endif
 
                                 <td>
-                                    {{ $project->owner_name->name ?? '' }}
+                                    {{ $project->engineer_name->name ?? '' }}
                                 </td>
                                 <td>
                                     @can('task_show')

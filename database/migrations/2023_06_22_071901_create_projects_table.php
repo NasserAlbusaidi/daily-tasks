@@ -15,12 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('estimation_cost');
-            $table->integer('engineer_owner');
-            $table->unsignedBigInteger('project_owner');
+            $table->integer('engineer_owner')->nullable();
+            $table->unsignedBigInteger('project_owner')->nullable();
             $table->integer('actual_cost');
             $table->integer('vote_number');
             //multiple users
-            $table->unsignedBigInteger('assigned_to')->nullable();
 
             $table->timestamps();
         });

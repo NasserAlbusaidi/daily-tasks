@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\ProjectOwner;
 use App\Models\TaskStatus;
 use App\Models\User;
+use App\Models\ProjectUser;
 use Illuminate\Http\Request;
 use Gate;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -20,8 +21,12 @@ class ProjectController extends Controller
     public function index(Project $project)
     {
         abort_if(Gate::denies('project_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $projects = Project::with(['media', 'assigned_to_name', 'owner_name'])->where('status_id', '!=', 3)->get();
+        $projects = Project::with(['media'])->where('status_id', '!=', 3)->get();
         //get owner name
+        // $projects->map(function($project){
+        //     $project->owner_name = $project->owner_name->name;
+        //     return $project;
+        // });
         return view('admin.projects.index', compact('projects'));
     }
 
@@ -30,12 +35,11 @@ class ProjectController extends Controller
         abort_if(Gate::denies('project_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $statuses = TaskStatus::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
         $assigned_to = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-        $project_owner = ProjectOwner::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
+        $project_owner = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         //get users with role engineer
         $engineer_owner = User::whereHas('roles', function($q){
-            $q->where('title', 'engineer');
+            $q->where('title', 'Engineer');
         })->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         return view('admin.projects.create', compact('statuses', 'assigned_to', 'engineer_owner', 'project_owner'));
@@ -101,14 +105,17 @@ class ProjectController extends Controller
             'actual_cost' => $request->actual_cost,
             'engineer_owner' => $request->engineer_owner,
             'status_id' => $request->status_id,
-            'assigned_to' => $request->assigned_to_id,
             'project_owner' => $request->project_owner,
             'vote_number' => $request->vote_number,
 
 
         ]);
-
-
+        foreach($request->assigned_to_id as $user){
+            $projectUser = new ProjectUser();
+            $projectUser->project_id = $project->id;
+            $projectUser->user_id = $user;
+            $projectUser->save();
+        }
 
         if($request->input('pdf_attachment', false)){
             $project->addMedia(storage_path('tmp/uploads/' . basename($request->input('pdf_attachment'))))->toMediaCollection('pdf_attachment');

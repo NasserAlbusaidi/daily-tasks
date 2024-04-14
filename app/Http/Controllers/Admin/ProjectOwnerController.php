@@ -26,12 +26,17 @@ class ProjectOwnerController extends Controller
     public function create()
     {
         abort_if(Gate::denies('user_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return view('admin.projectOwners.create');
+        //pluck('name', 'id');
+        $users = User::all()->pluck('name', 'id');
+        $projects = Project::where('project_owner', null)->pluck('title', 'id');
+        return view('admin.projectOwners.create', compact('users', 'projects'));
     }
 
     public function store(Request $request)
     {
         $owner = ProjectOwner::create($request->all());
+        $owner->name = User::where('id', $request->user_id)->pluck('name')->first();
+        $owner->save();
 
         return redirect()->route('admin.project-owners.index');
     }
@@ -40,13 +45,17 @@ class ProjectOwnerController extends Controller
     {
         abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $owner = ProjectOwner::findOrFail($id);
-        return view('admin.projectOwners.edit', compact('owner'));
+        $users = User::all()->pluck('name', 'id');
+        $projects = Project::where('project_owner', null)->pluck('title', 'id');
+        return view('admin.projectOwners.edit', compact('users', 'projects', 'owner'));
     }
 
     public function update(Request $request, $id)
     {
         $owner = ProjectOwner::findOrFail($id);
         $owner->update($request->all());
+        $owner->name = User::where('id', $request->user_id)->pluck('name')->first();
+        $owner->save();
         return redirect()->route('admin.project-owners.index');
     }
 

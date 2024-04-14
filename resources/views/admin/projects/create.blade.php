@@ -138,9 +138,9 @@
             </div> --}}
             <div class="form-group">
                 <label for="assigned_to_id">{{ trans('cruds.project.fields.assigned_to') }}</label>
-                <select class="form-control select2 {{ $errors->has('assigned_to') ? 'is-invalid' : '' }}" name="assigned_to_id" id="assigned_to_id">
+                <select class="form-control select2 {{ $errors->has('assigned_to') ? 'is-invalid' : '' }}" name="assigned_to_id[]" id="assigned_to_id" multiple>
                     @foreach($assigned_to as $id => $entry)
-                        <option value="{{ $id }}" {{ old('assigned_to_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    <option value="{{ $id }}" >{{ $entry }}</option>
                     @endforeach
                 </select>
                 @if($errors->has('assigned_to'))

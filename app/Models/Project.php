@@ -31,7 +31,7 @@ class Project extends Model implements HasMedia
         'excel_attachment',
         'status_id',
         'vote_number',
-        'assigned_to',
+
     ];
 
 
@@ -77,11 +77,10 @@ class Project extends Model implements HasMedia
 
     //get owner name
 
-    public function owner_name()
+    public function getProjectOwnerNameAttribute()
     {
-        return $this->belongsTo(ProjectOwner::class, 'project_owner');
+        return $this->projectOwner->name ?? '';
     }
-
     //get engineer name
 
     public function getEngineerOwnerNameAttribute()
@@ -89,11 +88,10 @@ class Project extends Model implements HasMedia
         return $this->engineerOwner->name ?? '';
     }
 
-    //get assigned to name
-
-    public function assigned_to_name()
+    public function projectUsers()
     {
-        return $this->belongsTo(User::class, 'assigned_to');
+        //multiple users
+        return $this->belongsToMany(User::class);
     }
 
     public function status()
@@ -105,6 +103,12 @@ class Project extends Model implements HasMedia
     {
         //user with role engineer
         return $this->belongsTo(User::class, 'engineer_owner');
+    }
+
+    public function owner_name()
+    {
+        //user with role owner
+        return $this->belongsTo(User::class, 'project_owner');
     }
 
 
