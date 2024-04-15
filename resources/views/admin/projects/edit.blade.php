@@ -138,19 +138,20 @@
                 <span class="help-block">{{ trans('cruds.project.fields.due_date_helper') }}</span>
             </div> --}}
             <div class="form-group">
-                <label for="assigned_to_id">{{ trans('cruds.project.fields.assigned_to') }}</label>
-                <select class="form-control select2 {{ $errors->has('assigned_to') ? 'is-invalid' : '' }}" name="assigned_to_id[]" id="assigned_to_id" multiple>
-                    @foreach($assigned_tos as $id => $entry)
-                    <option value="{{ $id }}" {{ (in_array($id, old('assigned_to', $project->assigned_to_name->pluck('id')->toArray() ?? []))) ? 'selected' : '' }}>{{ $entry }}</option>
+                <label for="assigned_tos_id">{{ trans('cruds.project.fields.assigned_tos') }}</label>
+                <select class="form-control select2 {{ $errors->has('assigned_tos') ? 'is-invalid' : '' }}" name="assigned_tos_id[]" id="assigned_tos_id" multiple>
+                    @foreach($users as $id => $entry)
+                        <option value="{{ $entry->id }}" {{ (in_array($id, old('assigned_tos', [])) || $assigned_users->contains($id + 1)) ? 'selected' : '' }}>{{ $entry->name }}</option>
                     @endforeach
                 </select>
-                @if($errors->has('assigned_to'))
+                @if($errors->has('assigned_tos'))
                     <div class="invalid-feedback">
-                        {{ $errors->first('assigned_to') }}
+                        {{ $errors->first('assigned_tos') }}
                     </div>
                 @endif
-                <span class="help-block">{{ trans('cruds.project.fields.assigned_to_helper') }}</span>
+                <span class="help-block">{{ trans('cruds.project.fields.assigned_tos_helper') }}</span>
             </div>
+
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}

@@ -48,19 +48,21 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         abort_if(Gate::denies('project_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $project->load('status', 'assigned_to_name', 'owner_name');
+        $project->load('status', 'owner_name');
         $statuses = TaskStatus::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-        $assigned_tos = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-        $project_owner = ProjectOwner::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $project_owner = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
         $engineer_owner = User::whereHas('roles', function($q){
             $q->where('title', 'engineer');
         })->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.projects.edit', compact('project', 'statuses', 'assigned_tos', 'project_owner', 'engineer_owner'));
+        $assigned_tos = ProjectUser::where('project_id', $project->id)->get();
+        $users = User::get();
+        $assigned_users = $users->whereIn('id', $assigned_tos->pluck('user_id'));
+        return view('admin.projects.edit', compact('project', 'statuses', 'assigned_users', 'project_owner', 'engineer_owner', 'users'));
     }
 
     public function update(Request $request, Project $project) {
-
        $project->update(
               [
                 'title' => $request->title,
@@ -68,11 +70,17 @@ class ProjectController extends Controller
                 'actual_cost' => $request->actual_cost,
                 'engineer_owner' => $request->engineer_owner,
                 'status_id' => $request->status_id,
-                'assigned_to' => $request->assigned_to_id,
                 'project_owner' => $request->project_owner,
                 'vote_number' => $request->vote_number,
               ]
        );
+        $project->projectUsers()->delete();
+        foreach($request->assigned_tos_id as $user){
+            $projectUser = new ProjectUser();
+            $projectUser->project_id = $project->id;
+            $projectUser->user_id = $user;
+            $projectUser->save();
+        }
        if($request->input('pdf_attachment', false)){
            if(!$project->pdf || $request->input('pdf_attachment') !== $project->pdf->file_name){
                if($project->pdf){

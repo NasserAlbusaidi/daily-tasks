@@ -111,5 +111,10 @@ class Project extends Model implements HasMedia
         return $this->belongsTo(User::class, 'project_owner');
     }
 
+    public function assigned_to()
+    {
+        return $this->belongsTo(ProjectUser::class, 'project_id');
+    }
+
 
 }
