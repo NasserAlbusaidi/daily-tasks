@@ -3,13 +3,13 @@
 
 <div class="card">
     <div class="card-header">
-        {{ trans('global.show') }} {{ trans('cruds.task.title') }}
+        {{ trans('global.show') }} {{ trans('cruds.project.title') }}
     </div>
 
     <div class="card-body">
         <div class="form-group">
             <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.tasks.index') }}">
+                <a class="btn btn-default" href="{{ route('admin.projects.index') }}">
                     {{ trans('global.back_to_list') }}
                 </a>
             </div>
@@ -17,53 +17,44 @@
                 <tbody>
                     <tr>
                         <th>
-                            {{ trans('cruds.task.fields.id') }}
+                            {{ trans('cruds.project.fields.id') }}
                         </th>
                         <td>
-                            {{ $task->id }}
+                            {{ $project->id }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.task.fields.name') }}
+                            {{ trans('cruds.project.fields.name') }}
                         </th>
                         <td>
-                            {{ $task->name }}
+                            {{ $project->title }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.task.fields.description') }}
+                            {{ trans('cruds.project.fields.description') }}
                         </th>
                         <td>
-                            {{ $task->description }}
+                            {{ $project->description ?? '' }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.task.fields.status') }}
+                            {{ trans('cruds.project.fields.status') }}
                         </th>
                         <td>
-                            {{ $task->status->name ?? '' }}
+                            {{ $project->status->name ?? '' }}
                         </td>
                     </tr>
+
                     <tr>
                         <th>
-                            {{ trans('cruds.task.fields.tag') }}
+                            {{ trans('cruds.project.fields.attachment') }}
                         </th>
                         <td>
-                            @foreach($task->tags as $key => $tag)
-                                <span class="label label-info">{{ $tag->name }}</span>
-                            @endforeach
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.task.fields.attachment') }}
-                        </th>
-                        <td>
-                            @if($task->attachment)
-                                <a href="{{ $task->attachment->getUrl() }}" target="_blank">
+                            @if($project->attachment)
+                                <a href="{{ $project->attachment->getUrl() }}" target="_blank">
                                     {{ trans('global.view_file') }}
                                 </a>
                             @endif
@@ -71,24 +62,26 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.task.fields.due_date') }}
+                            {{ trans('cruds.project.fields.due_date') }}
                         </th>
                         <td>
-                            {{ $task->due_date }}
+                            {{ $project->due_date }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.task.fields.assigned_to') }}
+                            {{ trans('cruds.project.fields.assigned_to') }}
                         </th>
                         <td>
-                            {{ $task->assigned_to->name ?? '' }}
+                            @foreach($project->assigned_tos as $key => $assigned_to)
+                                <span class="label label-info">{{ $assigned_to->name }}</span>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>
             </table>
             <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.tasks.index') }}">
+                <a class="btn btn-default" href="{{ route('admin.projects.index') }}">
                     {{ trans('global.back_to_list') }}
                 </a>
             </div>

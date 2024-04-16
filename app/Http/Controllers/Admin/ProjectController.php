@@ -176,4 +176,12 @@ class ProjectController extends Controller
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
     }
 
+
+    public function show(Project $project)
+    {
+        abort_if(Gate::denies('project_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $project->load('status', 'owner_name');
+        return view('admin.projects.show', compact('project'));
+    }
+
 }
