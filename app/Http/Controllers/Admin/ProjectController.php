@@ -74,7 +74,10 @@ class ProjectController extends Controller
                 'vote_number' => $request->vote_number,
               ]
        );
-        $project->projectUsers()->delete();
+        foreach($project->assigned_tos as $user){
+            $projectUser = ProjectUser::where('project_id', $project->id)->where('user_id', $user->id)->first();
+            $projectUser->delete();
+        }
         foreach($request->assigned_tos_id as $user){
             $projectUser = new ProjectUser();
             $projectUser->project_id = $project->id;

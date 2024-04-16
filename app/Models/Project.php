@@ -91,7 +91,7 @@ class Project extends Model implements HasMedia
     public function projectUsers()
     {
         //multiple users
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(ProjectUser::class);
     }
 
     public function status()
@@ -111,10 +111,11 @@ class Project extends Model implements HasMedia
         return $this->belongsTo(User::class, 'project_owner');
     }
 
-    public function assigned_to()
-    {
-        return $this->belongsTo(ProjectUser::class, 'project_id');
-    }
+    public function assigned_tos()
+{
+    return $this->belongsToMany(User::class, 'project_user');
+}
+
 
 
 }
