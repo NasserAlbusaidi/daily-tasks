@@ -31,6 +31,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('tasks/media', 'TaskController@storeMedia')->name('tasks.storeMedia');
     Route::post('tasks/ckmedia', 'TaskController@storeCKEditorImages')->name('tasks.storeCKEditorImages');
     Route::resource('tasks', 'TaskController');
+    Route::put('tasks/{task}/mark-as-done', 'TaskController@markAsDone')->name('tasks.markAsDone');
 
     // Tasks Calendar
     Route::resource('tasks-calendars', 'TasksCalendarController', ['except' => ['create', 'store', 'edit', 'update', 'show', 'destroy']]);
@@ -40,7 +41,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('projects', 'ProjectController');
     Route::post('projects/media', 'ProjectController@storeMedia')->name('projects.storeMedia');
     Route::post('projects/ckmedia', 'ProjectController@storeCKEditorImages')->name('projects.storeCKEditorImages');
-
+    Route::get('projects/{project}/tasks', 'ProjectTaskController@index')->name('projects.tasks');
 
     // Project Owners
     Route::delete('project-owners/destroy', 'ProjectOwnerController@massDestroy')->name('project-owners.massDestroy');

@@ -8,6 +8,7 @@ use App\Http\Requests\MassDestroyTaskRequest;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
+use App\Models\ProjectTask;
 use App\Models\TaskStatus;
 use App\Models\TaskTag;
 use App\Models\User;
@@ -32,14 +33,14 @@ class TaskController extends Controller
     public function create()
     {
         abort_if(Gate::denies('task_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+        $projectId = request()->query('project');
         $statuses = TaskStatus::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $tags = TaskTag::pluck('name', 'id');
 
         $assigned_tos = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.tasks.create', compact('assigned_tos', 'statuses', 'tags'));
+        return view('admin.tasks.create', compact('assigned_tos', 'statuses', 'tags', 'projectId'));
     }
 
     public function store(StoreTaskRequest $request)
@@ -50,11 +51,18 @@ class TaskController extends Controller
             $task->addMedia(storage_path('tmp/uploads/' . basename($request->input('attachment'))))->toMediaCollection('attachment');
         }
 
+        if($request->project_id){
+            $projectTask = new ProjectTask();
+            $projectTask->project_id = $request->project_id;
+            $projectTask->task_id = $task->id;
+            $projectTask->save();
+        }
+
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $task->id]);
         }
 
-        return redirect()->route('admin.tasks.index');
+        return redirect()->back();
     }
 
     public function edit(Task $task)
@@ -76,7 +84,6 @@ class TaskController extends Controller
     {
         $task->update($request->all());
         $task->tags()->sync($request->input('tags', []));
-        dd($task->attachment);
         if ($request->input('attachment', false)) {
             if (! $task->attachment || $request->input('attachment') !== $task->attachment->file_name) {
                 if ($task->attachment) {
@@ -88,7 +95,7 @@ class TaskController extends Controller
             $task->attachment->delete();
         }
 
-        return redirect()->route('admin.tasks.index');
+        return redirect()->back();
     }
 
     public function show(Task $task)
@@ -105,6 +112,10 @@ class TaskController extends Controller
         abort_if(Gate::denies('task_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $task->delete();
+        $projectTask = ProjectTask::where('task_id', $task->id)->first();
+        if($projectTask){
+            $projectTask->delete();
+        };
 
         return back();
     }
@@ -130,5 +141,15 @@ class TaskController extends Controller
         $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+    }
+
+    public function markAsDone(Task $task, Request $request)
+    {
+        abort_if(Gate::denies('task_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $task = Task::findOrFail($request->task->id);
+        $task->update(['status_id' => 3]);
+
+        return redirect()->back();
     }
 }

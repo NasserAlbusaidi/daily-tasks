@@ -79,4 +79,11 @@ class Task extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'assigned_to_id');
     }
+
+    public function project_tasks()
+    {
+        return $this->belongsTo(Project::class, 'project_tasks');
+    }
+
+
 }

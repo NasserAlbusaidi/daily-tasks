@@ -116,6 +116,11 @@ class Project extends Model implements HasMedia
     return $this->belongsToMany(User::class, 'project_user');
 }
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'project_tasks');
+    }
+
 
 
 }

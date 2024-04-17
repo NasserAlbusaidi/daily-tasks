@@ -111,6 +111,12 @@
                                         <a class="btn btn-xs btn-info" href="{{ route('admin.projects.edit', $project->id) }}">
                                             {{ trans('global.edit') }}
                                         </a>
+
+                                        <a class="btn btn-xs btn-info"
+                                            href="{{ route('admin.projects.tasks', $project->id) }}">
+                                            {{ trans('global.tasks') }}
+                                        </a>
+
                                     @endcan
 
                                     @can('task_delete')

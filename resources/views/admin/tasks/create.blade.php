@@ -96,11 +96,16 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.task.fields.assigned_to_helper') }}</span>
             </div>
+
+            <div class="form-group">
+                <input type="hidden" name="project_id" value="{{ $projectId }}">
+            </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
             </div>
+
         </form>
     </div>
 </div>
