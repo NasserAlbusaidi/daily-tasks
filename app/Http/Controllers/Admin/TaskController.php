@@ -94,7 +94,7 @@ class TaskController extends Controller
         } elseif ($task->attachment) {
             $task->attachment->delete();
         }
-
+        // dd($request->project_id);
         return redirect()->back();
     }
 
