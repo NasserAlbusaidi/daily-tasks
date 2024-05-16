@@ -87,4 +87,10 @@ class User extends Authenticatable
     {
         return $this->roles()->pluck('title')->implode(' ');
     }
+
+    public function assignedTasksHistory()
+    {
+        return $this->belongsToMany(Task::class, 'task_user_history')
+            ->withPivot('assigned_at', 'unassigned_at');
+    }
 }

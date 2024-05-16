@@ -85,5 +85,9 @@ class Task extends Model implements HasMedia
         return $this->belongsTo(Project::class, 'project_tasks');
     }
 
-
+    public function assignedUsersHistory()
+    {
+        return $this->belongsToMany(User::class, 'task_user_history')
+            ->withPivot('assigned_at', 'unassigned_at');
+    }
 }

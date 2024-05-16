@@ -112,6 +112,7 @@ return [
             'description'        => 'Description',
             'description_helper' => ' ',
             'status'             => 'Status',
+            'history'            => 'History',
             'status_helper'      => ' ',
             'tag'                => 'Tags',
             'tag_helper'         => ' ',

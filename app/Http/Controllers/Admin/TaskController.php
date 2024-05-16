@@ -57,6 +57,9 @@ class TaskController extends Controller
             $projectTask->task_id = $task->id;
             $projectTask->save();
         }
+        $userId = $request->input('assigned_to_id');
+        $task->assignedUsersHistory()->attach($userId, ['assigned_at' => now()]);
+
 
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $task->id]);
@@ -94,6 +97,8 @@ class TaskController extends Controller
         } elseif ($task->attachment) {
             $task->attachment->delete();
         }
+        $userId = $task->assigned_to_id;
+        $task->assignedUsersHistory()->attach($userId, ['assigned_at' => now()]);
         // dd($request->project_id);
         return redirect()->back();
     }
