@@ -53,6 +53,8 @@ class TaskController extends Controller
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $task->id]);
         }
+        $userId = $request->input('assigned_to_id');
+        $task->assignedUsersHistory()->attach($userId, ['assigned_at' => now()]);
 
         return redirect()->route('frontend.tasks.index');
     }
@@ -86,6 +88,8 @@ class TaskController extends Controller
         } elseif ($task->attachment) {
             $task->attachment->delete();
         }
+        $userId = $task->assigned_to_id;
+        $task->assignedUsersHistory()->attach($userId, ['assigned_at' => now()]);
 
         return redirect()->route('frontend.tasks.index');
     }

@@ -93,4 +93,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Task::class, 'task_user_history')
             ->withPivot('assigned_at', 'unassigned_at');
     }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_user', 'user_id', 'project_id');
+    }
 }

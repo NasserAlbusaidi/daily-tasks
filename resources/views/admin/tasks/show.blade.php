@@ -89,14 +89,19 @@
                                 {{ trans('cruds.task.fields.history') }}
                             </th>
                             <td>
-                                @foreach ($task->assignedUsersHistory as $user)
-                                    <li>
-                                        {{ $user->name }} - Assigned at: {{ \Carbon\Carbon::parse($user->pivot->assigned_at)->format('d-m-Y H:i')}}                                      @if ($user->pivot->unassigned_at)
-                                            - Unassigned at: {{ $user->pivot->unassigned_at }}
-                                        @endif
-                                    </li>
-                                @endforeach
+                                <ol>
+                                    @foreach ($task->assignedUsersHistory as $user)
+                                        <li>
+                                            {{ $user->name }} - Assigned at:
+                                            {{ \Carbon\Carbon::parse($user->pivot->assigned_at)->format('d-m-Y H:i') }}
+                                            @if ($user->pivot->unassigned_at)
+                                                - Unassigned at: {{ $user->pivot->unassigned_at }}
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ol>
                             </td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="form-group">

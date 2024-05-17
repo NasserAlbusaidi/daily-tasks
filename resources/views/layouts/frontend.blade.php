@@ -64,7 +64,13 @@
                                 </a>
                             </li>
                             @endif
-
+                            @if(Auth::user()->projects)
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('frontend.projects.index') }}">
+                                    {{ __('Projects') }}
+                                </a>
+                            </li>
+                            @endif
                         @endguest
                     </ul>
 

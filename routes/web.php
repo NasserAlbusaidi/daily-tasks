@@ -73,6 +73,9 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
     Route::resource('users', 'UsersController');
 
+    // Projects
+    Route::resource('projects', 'ProjectController');
+
 
 
     // Task Tag
